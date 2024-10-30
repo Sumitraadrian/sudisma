@@ -21,10 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lampiran_nama = null;
     }
 
-    // Menyusun query dengan tanggal pengajuan dari form
     $query = "INSERT INTO pengajuan (user_id, nama_lengkap, nim, angkatan, jurusan, alasan, tanggal_pengajuan, email, dokumen_lampiran) 
     VALUES ('$user_id', '$nama_lengkap', '$nim', '$angkatan', '$jurusan', '$alasan', '$tanggal_pengajuan', '$email', '$lampiran_nama')";
-
 
     if ($conn->query($query) === TRUE) {
         header('Location: status_pengajuan.php');
@@ -33,9 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error: " . $query . "<br>" . $conn->error;
     }
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="id">
@@ -43,68 +39,147 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Pengajuan Dispensasi</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        .custom-bg {
+            background-color: #5393F3; /* Customize this color as desired */
+        }
+        .sidebar {
+            background-color: #f8f9fa;
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 60px;
+            transition: transform 0.3s ease;
+            transform: translateX(0);
+            z-index: 1;
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .content-wrapper {
+            margin-left: 250px;
+            padding-top: 60px;
+            transition: margin-left 0.3s ease;
+        }
+        .content-wrapper.expanded {
+            margin-left: 0;
+        }
+        .navbar {
+            background-color: #ffff;
+            color: black;
+            z-index: 2;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h3>SUDISMA</h3>
-            <nav>
-                <a href="#">Dashboard</a>
-                <a href="#">Download</a>
-            </nav>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <!-- Icon Hamburger -->
+            <!-- Icon Hamburger -->
+            <button class="btn me-3" id="sidebarToggle" style="background-color: transparent; border: none;">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+
+            <a class="navbar-brand text-dark" href="#">SUDISMA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                
+            </div>
         </div>
-        <div class="main-content">
-            <div class="form-container">
-                <h2>Form Pengajuan Dispensasi</h2>
-                <form method="POST" action="" enctype="multipart/form-data" onsubmit="return validateForm(event)">
-                    <label for="nama_lengkap">Nama Lengkap Mahasiswa</label>
-                    <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" required>
-                    
-                    <label for="nim">Nomor Induk Mahasiswa (NIM)</label>
-                    <input type="text" name="nim" placeholder="Nomor Induk Mahasiswa (NIM)" required>
-                    
-                    <label for="angkatan">Angkatan</label>
-                    <input type="text" name="angkatan" placeholder="Angkatan" required>
-                    <label for="jurusan">Jurusan:</label>
-                    <select name="jurusan" required>
-                        <option value="">Pilih Jurusan</option>
-                        <option value="Teknik Informatika">Teknik Informatika</option>
-                        <option value="Teknik Elektro">Teknik Elektro</option>
-                        <option value="Biologi">Biologi</option>
-                        <option value="Fisika">Fisika</option>
-                        <option value="Kimia">Kimia</option>
-                        <option value="Agroteknologi">Agroteknologi</option>
-                        <option value="Matematika">Matematika</option>
-                        <!-- Tambahkan pilihan lain sesuai kebutuhan -->
-                    </select>
-                    
-                    <label for="alasan">Alasan Pengajuan</label>
-                    <textarea name="alasan" placeholder="Alasan Pengajuan" required></textarea>
-                    
-                    <label for="tanggal_pengajuan">Tanggal Pengajuan</label>
-                    <input type="date" name="tanggal_pengajuan" required>
-                    
-                    <label for="email">Email</label>
-                    <input type="email" name="email" placeholder="Email" required>
-                    
-                    <label for="dokumen_lampiran">Lampiran Dokumen (optional)</label>
-                    <input type="file" name="dokumen_lampiran">
-                    
-                    <button type="submit">Simpan Data</button>
-                </form>
+    </nav>
+
+    <!-- Sidebar -->
+    <!-- Sidebar -->
+    <div class="sidebar bg-light p-3" id="sidebar">
+        <h4 class="text-center">SUDISMA</h4>
+        <small class="text-muted ms-2">Menu</small>
+        <nav class="nav flex-column mt-2">
+            <a class="nav-link active d-flex align-items-center" href="form_pengajuan.php">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+            </a>
+            <a class="nav-link d-flex align-items-center" href="status_pengajuan.php">
+                <i class="bi bi-file-earmark-text me-2"></i> Status Pengajuan
+            </a>
+            <a class="nav-link d-flex align-items-center" href="#">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="content-wrapper custom-bg d-flex justify-content-center align-items-center" id="content">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Form Pengajuan Dispensasi</h2>
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="nama_lengkap" class="form-label">Nama Lengkap Mahasiswa</label>
+                            <input type="text" name="nama_lengkap" class="form-control" placeholder="Nama Lengkap" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nim" class="form-label">Nomor Induk Mahasiswa (NIM)</label>
+                            <input type="text" name="nim" class="form-control" placeholder="Nomor Induk Mahasiswa (NIM)" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="angkatan" class="form-label">Angkatan</label>
+                            <input type="text" name="angkatan" class="form-control" placeholder="Angkatan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jurusan" class="form-label">Jurusan</label>
+                            <select name="jurusan" class="form-select" required>
+                                <option value="">Pilih Jurusan</option>
+                                <option value="Teknik Informatika">Teknik Informatika</option>
+                                <option value="Teknik Elektro">Teknik Elektro</option>
+                                <option value="Biologi">Biologi</option>
+                                <option value="Fisika">Fisika</option>
+                                <option value="Kimia">Kimia</option>
+                                <option value="Agroteknologi">Agroteknologi</option>
+                                <option value="Matematika">Matematika</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="alasan" class="form-label">Alasan Pengajuan</label>
+                            <textarea name="alasan" class="form-control" placeholder="Alasan Pengajuan" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tanggal_pengajuan" class="form-label">Tanggal Pengajuan</label>
+                            <input type="date" name="tanggal_pengajuan" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dokumen_lampiran" class="form-label">Lampiran Dokumen (optional)</label>
+                            <input type="file" name="dokumen_lampiran" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Simpan Data</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-     <!-- Modal Konfirmasi -->
-     <div id="confirmationModal" class="modal">
-        <div class="modal-content">
-            <p>Apakah Data yang kamu Isi sudah benar?</p>
-            <button onclick="confirmSubmit()">Ya, Data sudah benar</button>
-            <button onclick="closeModal()">Batalkan</button>
-        </div>
-    </div>
 
-    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Toggle Sidebar
+        document.getElementById("sidebarToggle").addEventListener("click", function() {
+            const sidebar = document.getElementById("sidebar");
+            const content = document.getElementById("content");
+            sidebar.classList.toggle("collapsed");
+            content.classList.toggle("expanded");
+        });
+    </script>
 </body>
 </html>
