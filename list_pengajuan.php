@@ -7,8 +7,20 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-$query = "SELECT nama_dosen, email, nip FROM dosen";
+$query = "SELECT * FROM pengajuan";
 $result = $conn->query($query);
+
+// Proses penghapusan jika ada permintaan
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    $delete_query = "DELETE FROM pengajuan WHERE id = ?";
+    $stmt = $conn->prepare($delete_query);
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+    $stmt->close();
+    header('Location: list_pengajuan.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +28,7 @@ $result = $conn->query($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUDISMA - Dosen</title>
+    <title>SUDISMA - Dispensasi</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
@@ -149,24 +161,27 @@ $result = $conn->query($query);
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <div class="container-fluid">
-            <button class="btn me-3" id="sidebarToggle" style="background-color: transparent; border: none;">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand text-black" href="#">SUDISMA</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <!-- Tambahkan menu lain di sini jika diperlukan -->
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn me-3" id="sidebarToggle" style="background-color: transparent; border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a class="navbar-brand text-black" href="#">SUDISMA</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <!-- Tambahkan menu lain di sini jika diperlukan -->
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <!-- Sidebar -->
+   <!-- Sidebar -->
     <div class="sidebar bg-light p-3" id="sidebar">
         <h4 class="text-center">SUDISMA</h4>
         <div style="height: 40px;"></div>
@@ -192,19 +207,22 @@ $result = $conn->query($query);
             </a>
         </nav>
     </div>
-
-    <div class="main-content" id="content">
+    <div class="main-content"  id="content">
         <div class="container mt-5">
             <div class="table-container">
-                <div class="header-title">List Dosen Penyetuju</div>
+                <div class="header-title">List Data Dispensasi</div>
                 <div class="table-responsive">
-                    <table id="dosenTable" class="table table-bordered table-hover">
+                    <table id="dispensasiTable" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Nama Dosen</th>
-                                <th>NIP</th>
-                                <th>Email</th>
+                                <th>Nama Lengkap</th>
+                                <th>NIM</th>
+                                <th>Angkatan</th>
+                                <th>Alasan</th>
+                                <th>Tanggal Pengajuan</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -212,9 +230,28 @@ $result = $conn->query($query);
                             <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
                                 <td class="text-center"><?= $no++; ?></td>
-                                <td><?= htmlspecialchars($row['nama_dosen']); ?></td>
-                                <td><?= $row['nip'] ? htmlspecialchars($row['nip']) : 'N/A'; ?></td>
-                                <td><?= htmlspecialchars($row['email']); ?></td>
+                                <td><?= htmlspecialchars($row['nama_lengkap']); ?></td>
+                                <td><?= htmlspecialchars($row['nim']); ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['angkatan']); ?></td>
+                                <td><?= htmlspecialchars($row['alasan']); ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['tanggal_pengajuan']); ?></td>
+                                <td class="text-center">
+                                    <?php if ($row['status'] == 'pending'): ?>
+                                        <span class="status-badge status-belum-diproses">Belum diproses</span>
+                                    <?php elseif ($row['status'] == 'disetujui'): ?>
+                                        <span class="status-badge status-diterima">Diterima</span>
+                                    <?php elseif ($row['status'] == 'ditolak'): ?>
+                                        <span class="status-badge status-ditolak">Ditolak</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="action-buttons text-center">
+                                <a href="detail_pengajuan.php?id=<?= urlencode($row['id']); ?>" class="btn btn-info btn-custom" style="text-decoration: none;">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                    <button class="btn btn-danger btn-custom" onclick="confirmDelete(<?= $row['id']; ?>)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
                             </tr>
                             <?php endwhile; ?>
                         </tbody>
@@ -223,36 +260,43 @@ $result = $conn->query($query);
             </div>
         </div>
 
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- DataTables JS -->
-        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-        <!-- Bootstrap JS -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                $('#dosenTable').DataTable({
-                    "pagingType": "simple_numbers",
-                    "lengthMenu": [10, 25, 50, 100],
-                    "language": {
-                        "search": "Search:",
-                        "lengthMenu": "Show _MENU_ entries",
-                        "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-                        "paginate": {
-                            "previous": "Previous",
-                            "next": "Next"
-                        }
-                    },
-                    "columnDefs": [
-                        { "orderable": false, "targets": 0 } // Disable sorting for the first column (no.)
-                    ]
-                });
-            });
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#dispensasiTable').DataTable({
+            "pagingType": "simple_numbers",
+            "lengthMenu": [10, 25, 50, 100],
+            "language": {
+                "search": "Search:",
+                "lengthMenu": "Show _MENU_ entries",
+                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "paginate": {
+                    "previous": "Previous",
+                    "next": "Next"
+                }
+            },
+            "columnDefs": [
+                { "orderable": false, "targets": 7 }
+            ]
+        });
+    });
 
-            document.getElementById("sidebarToggle").addEventListener("click", function() {
-                document.getElementById("sidebar").classList.toggle("collapsed");
-                document.getElementById("content").classList.toggle("expanded");
-            });
-        </script>
-    </body>
+    function confirmDelete(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                window.location.href = "list_pengajuan.php?delete_id=" + id;
+            }
+        }
+        document.getElementById("sidebarToggle").addEventListener("click", function() {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+        document.getElementById("content").classList.toggle("expanded");
+    });
+    
+</script>
+
+</body>
 </html>

@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #ffff;
             color: black;
             z-index: 2;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -97,22 +98,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
     <!-- Sidebar -->
-    <!-- Sidebar -->
-    <div class="sidebar bg-light p-3" id="sidebar">
+   <!-- Sidebar -->
+    <div class="sidebar bg-light p-3 shadow-lg" id="sidebar">
         <h4 class="text-center">SUDISMA</h4>
+        <div style="height: 40px;"></div>
         <small class="text-muted ms-2">Menu</small>
         <nav class="nav flex-column mt-2">
-            <a class="nav-link active d-flex align-items-center" href="form_pengajuan.php">
+            <a class="nav-link active d-flex align-items-center text-dark" href="dashboard_mahasiswa.php" style="color: black;">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </a>
-            <a class="nav-link d-flex align-items-center" href="status_pengajuan.php">
+            <a class="nav-link d-flex align-items-center text-dark" href="status_pengajuan.php" style="color: black;">
                 <i class="bi bi-file-earmark-text me-2"></i> Status Pengajuan
             </a>
-            <a class="nav-link d-flex align-items-center" href="#">
+            <a class="nav-link d-flex align-items-center text-dark" href="logout.php" style="color: black;">
                 <i class="bi bi-box-arrow-right me-2"></i> Logout
             </a>
         </nav>
     </div>
+
 
 
     <!-- Main Content -->
@@ -121,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4">Form Pengajuan Dispensasi</h2>
-                    <form method="POST" action="" enctype="multipart/form-data">
+                    <form id="dispensasiForm" method="POST" action="" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="nama_lengkap" class="form-label">Nama Lengkap Mahasiswa</label>
                             <input type="text" name="nama_lengkap" class="form-control" placeholder="Nama Lengkap" required>
@@ -160,11 +163,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="email" name="email" class="form-control" placeholder="Email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="dokumen_lampiran" class="form-label">Lampiran Dokumen (optional)</label>
-                            <input type="file" name="dokumen_lampiran" class="form-control">
+                            <label for="dokumen_lampiran" class="form-label">Lampiran Dokumen</label>
+                            <input type="file" name="dokumen_lampiran" class="form-control" placeholder="Email" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Simpan Data</button>
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#confirmModal">Simpan Data</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h5>Apakah Data yang kamu Isi sudah benar?</h5>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="confirmButton">Ya, Data sudah benar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                 </div>
             </div>
         </div>
@@ -173,12 +191,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script>
-        // Toggle Sidebar
+        document.getElementById("confirmButton").addEventListener("click", function() {
+            document.getElementById("dispensasiForm").submit(); // Mengirim form setelah konfirmasi
+        });
         document.getElementById("sidebarToggle").addEventListener("click", function() {
-            const sidebar = document.getElementById("sidebar");
-            const content = document.getElementById("content");
-            sidebar.classList.toggle("collapsed");
-            content.classList.toggle("expanded");
+            document.getElementById("sidebar").classList.toggle("collapsed");
+            document.getElementById("content").classList.toggle("expanded");
         });
     </script>
 </body>
