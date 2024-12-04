@@ -1,0 +1,336 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: #343a40;
+        color: white;
+        padding-top: 80px;
+        transition: transform 0.3s ease;
+}
+
+.sidebar h5 {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+
+.sidebar a {
+    color: white;
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.sidebar a:hover {
+    background-color: #495057;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+.sidebar.collapsed ~ .dashboard-header {
+    margin-left: 0;
+    width: 100%;
+}
+
+.sidebar.collapsed ~ .main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
+.content-wrapper {
+    margin-left: 250px;
+    padding-top: 60px;
+    transition: margin-left 0.3s ease;
+}
+
+.content-wrapper.expanded {
+    margin-left: 0;
+}
+
+.dashboard-header {
+    width: calc(100% - 250px);
+    padding: 120px;
+    border-radius: 0;
+    background-color: #4472c4;
+    margin-left: 0px;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+    margin-left: 250px;
+    justify-content: space-between;
+    display: flex;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    margin-top: 150px;
+    min-height: calc(100vh - 56px);
+}
+
+.welcome-card {
+    background-color: #ffffff;
+    padding: 0px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: -240px;
+    display: flex;
+    margin-right: 90px;
+    justify-content: space-between;
+    position: relative;
+    left: 0;
+    z-index: 1;
+    width: calc(100% - 40px);
+    transition: all 0.3s ease;
+}
+
+.welcome-card div {
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-card h4 {
+    margin: 0;
+    margin-top: 40px;
+    margin-left: 40px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.welcome-card p {
+    margin: 5px 0 0 0;
+    font-size: 20px;
+    margin-left: 40px;
+    color: #555;
+}
+
+.welcome-card img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    margin-right: 40px;
+}
+
+.info-card {
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.info-card-primary {
+    background-color: #4a90e2;
+}
+
+.info-card-warning {
+    background-color: #f5a623;
+}
+
+.navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#current-date {
+    width: 250px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 10px;
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    gap: 8px;
+}
+
+#current-date i {
+    font-size: 18px;
+    color: black;
+}
+
+.dashboard-header h3 {
+    margin: 0;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.dashboard-header small {
+    display: block;
+    font-size: 17px;
+    color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+            height: auto;
+            top: 0;
+            left: 0;
+            transform: translateY(-100%);
+            position: absolute;
+            z-index: 1000; /* Agar berada di atas header */
+            transition: transform 0.3s ease;
+    }
+
+    .sidebar.visible {
+            transform: translateY(0);
+        }
+
+    .dashboard-header {
+        
+        margin-left: 0; /* Reset margin di mode responsif */
+        width: 100%; /* Pastikan header memenuhi lebar layar */
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        position: relative;
+        padding: 80px;
+        z-index: 1;
+    }
+    .sidebar ~ .dashboard-header {
+            z-index: 999;
+        }
+    .dashboard-header .current-date-container {
+        margin-top: 10px; /* Adds space between the small and the current date */
+    }
+    
+    /* Keep other styles for responsiveness as they are */
+    .dashboard-header h3 {
+        font-size: 25px;
+    }
+    .dashboard-header h3, .dashboard-header small {
+        text-align: left;
+    }
+    .dashboard-header small {
+        font-size: 14px; /* Reduce font size for small text */
+    }
+    #current-date {
+        font-size: 11px; /* Smaller font size for the current date */
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+        margin-top: 100px;
+    }
+
+    .welcome-card {
+        flex-direction: column;
+        margin-top: -120px;
+        width: 100%;
+    }
+
+    .welcome-card h4 {
+        font-size: 24px;
+        margin-left: 20px;
+    }
+    .welcome-card div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Align text to the left */
+        text-align: left; /* Ensure the text is left-aligned */
+    }
+
+    /* Move the "Di Website Aplikasi Surat Izin Dispensasi" text to the left */
+    .welcome-card h4, .welcome-card p {
+        margin-left: 0; /* Remove the left margin to align it to the left */
+        text-align: left; /* Ensure the text is left-aligned */
+    }
+
+    .welcome-card img {
+        margin-left: 0;
+        margin-right: 0;
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        margin-top: 20px; /* Optional: add some space between the image and text */
+    }
+
+    .info-card {
+        flex-direction: column;
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    #current-date {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .welcome-card p{
+        padding: 10px;
+        font-size: 15px;
+        text-align: left
+    }
+    #dispen-hari-ini {
+        text-align: center;  /* Align the text to the center */
+        width: 100%;          /* Make sure it takes the full width */
+        margin: 0 auto;
+        margin-bottom: 10px;       /* Center it horizontally */
+    }
+
+    /* Optionally, you can also adjust the parent container for better alignment */
+    .info-card-primary {
+        justify-content: center; /* Center the contents of the info card */
+    }
+    #data-terbaru {
+        text-align: center;  /* Align the text to the center */
+        width: 100%;          /* Make sure it takes the full width */
+        margin: 0 auto;
+        margin-bottom: 10px;       /* Center it horizontally */
+    }
+
+    /* Optionally, you can also adjust the parent container for better alignment */
+    .info-card-primary {
+        justify-content: center; /* Center the contents of the info card */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 100%;
+            height: auto;
+            top: 0;
+            left: 0;
+            transform: translateY(-100%);
+            position: absolute;
+            z-index: 1000; /* Agar berada di atas header */
+            transition: transform 0.3s ease;
+    }
+
+    .sidebar a {
+        font-size: 14px;
+    }
+
+    .dashboard-header h3 {
+        font-size: 20px;
+        margin-left:automatic;
+    }
+
+    .welcome-card h4 {
+        font-size: 20px;
+        margin-left: 10px;
+    }
+
+    .info-card {
+        font-size: 14px;
+    }
+
+    .navbar {
+        padding: 5px;
+    }
+}

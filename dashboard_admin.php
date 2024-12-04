@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+$currentPage = basename($_SERVER['PHP_SELF']);
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: index.php');
@@ -18,6 +19,27 @@ $queryDataTerbaru = "SELECT COUNT(*) AS total FROM pengajuan WHERE status = 'pen
 $resultDataTerbaru = $conn->query($queryDataTerbaru);
 $dataTerbaru = $resultDataTerbaru->fetch_assoc()['total'];
 
+// Statistik Pengajuan Berdasarkan Kajur dan Wadek
+$queryKajurDisetujui = "SELECT COUNT(*) AS total FROM pengajuan WHERE status = 'disetujui'";
+$resultKajurDisetujui = $conn->query($queryKajurDisetujui);
+$kajurDisetujui = $resultKajurDisetujui->fetch_assoc()['total'];
+
+$queryWadekDisetujui = "SELECT COUNT(*) AS total FROM pengajuan WHERE status_wadek = 'disetujui'";
+$resultWadekDisetujui = $conn->query($queryWadekDisetujui);
+$wadekDisetujui = $resultWadekDisetujui->fetch_assoc()['total'];
+
+$queryKajurDitolak = "SELECT COUNT(*) AS total FROM pengajuan WHERE status = 'ditolak'";
+$resultKajurDitolak = $conn->query($queryKajurDitolak);
+$kajurDitolak = $resultKajurDitolak->fetch_assoc()['total'];
+
+$queryWadekDitolak = "SELECT COUNT(*) AS total FROM pengajuan WHERE status_wadek = 'ditolak'";
+$resultWadekDitolak = $conn->query($queryWadekDitolak);
+$wadekDitolak = $resultWadekDitolak->fetch_assoc()['total'];
+
+// Statistik Pengajuan Pending
+$queryPending = "SELECT COUNT(*) AS total FROM pengajuan WHERE status = 'pending' OR status_wadek = 'pending'";
+$resultPending = $conn->query($queryPending);
+$pending = $resultPending->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +50,11 @@ $dataTerbaru = $resultDataTerbaru->fetch_assoc()['total'];
     <title>SUDISMA - Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
@@ -246,33 +273,37 @@ $dataTerbaru = $resultDataTerbaru->fetch_assoc()['total'];
 
 
     <!-- Sidebar -->
-   <!-- Sidebar -->
-    <div class="sidebar bg-light p-3" id="sidebar">
+   
+    <div class="sidebar bg-light p-3 d-flex flex-column" id="sidebar" style="height: 100vh;">
         <h4 class="text-center">SUDISMA</h4>
-        <div style="height: 40px;"></div>
-        <small class="text-muted ms-2" style="margin-top: 80px;">Menu</small>
+        
+        <small class="text-muted ms-2" style="margin-top: 70px;">Menu</small>
         <nav class="nav flex-column mt-2">
-            <a class="nav-link active d-flex align-items-center text-dark" href="dashboard_admin.php" style="color: black;">
-                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+            <a class="nav-link d-flex align-items-center <?= $currentPage == 'dashboard_admin.php' ? 'active' : '' ?>" href="dashboard_admin.php" style="color: <?= $currentPage == 'dashboard_admin.php' ? '#007bff' : 'black'; ?>;">
+                <i class="bi bi-activity" style="margin-right: 15px;"></i> Dashboard
             </a>
-            <a class="nav-link d-flex align-items-center text-dark" href="list_pengajuan.php" style="color: black;">
-                <i class="bi bi-file-earmark-text me-2"></i> Dispensasi
+            <a class="nav-link d-flex align-items-center <?= $currentPage == 'pengajuanadmin.php' ? 'active' : '' ?>" href="pengajuanadmin.php" style="color: <?= $currentPage == 'pengajuanadmin.php' ? '#007bff' : 'black'; ?>;">
+                <i class="bi bi-file-earmark-plus" style="margin-right: 15px;"></i> Dispensasi
             </a>
-            <a class="nav-link d-flex align-items-center text-dark" href="list_angkatan.php" style="color: black;">
-                <i class="bi bi-file-earmark-text me-2"></i> Angkatan
+            <a class="nav-link d-flex align-items-center <?= $currentPage == 'list_pengajuan.php' ? 'active' : '' ?>" href="list_pengajuan.php" style="color: <?= $currentPage == 'list_pengajuan.php' ? '#007bff' : 'black'; ?>;">
+                <i class="bi bi-x-circle" style="margin-right: 15px;"></i> Riwayat Pengajuan
             </a>
-            <a class="nav-link d-flex align-items-center text-dark" href="list_dosen.php" style="color: black;">
-                <i class="bi bi-file-earmark-text me-2"></i> Dosen Penyetuju
+            <a class="nav-link d-flex align-items-center <?= $currentPage == 'list_dosen.php' ? 'active' : '' ?>" href="list_dosen.php" style="color: <?= $currentPage == 'list_dosen.php' ? '#007bff' : 'black'; ?>;">
+                <i class="bi bi-archive" style="margin-right: 15px;"></i> Data User Dosen
             </a>
-            <a class="nav-link d-flex align-items-center text-dark" href="list_tanggal.php" style="color: black;">
-                <i class="bi bi-file-earmark-text me-2"></i> Tanggal Pengajuan
+            <a class="nav-link d-flex align-items-center <?= $currentPage == 'list_user.php' ? 'active' : '' ?>" href="list_user.php" style="color: <?= $currentPage == 'list_user.php' ? '#007bff' : 'black'; ?>;">
+                <i class="bi bi-box" style="margin-right: 15px;"></i> Data User Mahasiswa
             </a>
-            <a class="nav-link d-flex align-items-center text-dark" href="logout.php" style="color: black;">
-                <i class="bi bi-box-arrow-right me-2"></i> Logout
+            <a class="nav-link d-flex align-items-center <?= $currentPage == 'settingadmin.php' ? 'active' : '' ?>" href="settingadmin.php" style="color: <?= $currentPage == 'settingadmin.php' ? '#007bff' : 'black'; ?>;">
+                <i class="bi bi-gear" style="margin-right: 15px;"></i> Pengaturan Akun
+            </a>
+            <a class="nav-link d-flex align-items-center <?= $currentPage == 'logout.php' ? 'active' : '' ?>" href="logout.php" style="color: <?= $currentPage == 'logout.php' ? '#007bff' : 'black'; ?>;">
+                <i class="bi bi-box-arrow-right" style="margin-right: 15px;"></i> Logout
             </a>
         </nav>
-    </div>
 
+       
+    </div>
 
     <!-- Sidebar 
     <div class="sidebar">
@@ -315,30 +346,60 @@ $dataTerbaru = $resultDataTerbaru->fetch_assoc()['total'];
 
         <!-- Information Cards -->
         <<!-- Information Cards -->
-<div class="row mt-4">
-    <div class="col-md-6">
-        <div class="info-card info-card-primary">
-            <div>
-                <h5>Dispen Hari ini</h5>
-                <h2 id="dispen-hari-ini"><?php echo $dispenHariIni; ?></h2>
+        <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="info-card info-card-primary">
+                <div>
+                    <h5>Disetujui Kajur</h5>
+                    <h2 id="kajur-disetujui"><?php echo $kajurDisetujui; ?></h2>
+                </div>
+                <i class="fas fa-check-circle fa-2x" style="cursor: pointer;"></i>
             </div>
-            <!-- Ikon tanpa tombol -->
-            <i class="fas fa-envelope fa-2x" onclick="lihatDispenHariIni()" style="cursor: pointer;"></i>
+        </div>
+        <div class="col-md-6">
+            <div class="info-card info-card-primary">
+                <div>
+                    <h5>Disetujui Wadek</h5>
+                    <h2 id="wadek-disetujui"><?php echo $wadekDisetujui; ?></h2>
+                </div>
+                <i class="fas fa-check-circle fa-2x" style="cursor: pointer;"></i>
+            </div>
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="info-card info-card-warning">
-            <div>
-                <h5>Data Terbaru</h5>
-                <h2 id="data-terbaru"><?php echo $dataTerbaru; ?></h2>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="info-card info-card-warning">
+                <div>
+                    <h5>Ditolak Kajur</h5>
+                    <h2 id="kajur-ditolak"><?php echo $kajurDitolak; ?></h2>
+                </div>
+                <i class="fas fa-times-circle fa-2x" style="cursor: pointer;"></i>
             </div>
-            <!-- Ikon tanpa tombol -->
-            <i class="fas fa-envelope fa-2x" onclick="lihatDataTerbaru()" style="cursor: pointer;"></i>
+        </div>
+        <div class="col-md-6">
+            <div class="info-card info-card-warning">
+                <div>
+                    <h5>Ditolak Wadek</h5>
+                    <h2 id="wadek-ditolak"><?php echo $wadekDitolak; ?></h2>
+                </div>
+                <i class="fas fa-times-circle fa-2x" style="cursor: pointer;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="info-card">
+                <div>
+                    <h5>Pengajuan Pending</h5>
+                    <h2><?php echo $pending; ?></h2>
+                </div>
+                <i class="fas fa-hourglass-half fa-2x" style="cursor: pointer;"></i>
+            </div>
         </div>
     </div>
 </div>
-
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

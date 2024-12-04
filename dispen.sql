@@ -79,7 +79,9 @@ CREATE TABLE `jurusan` (
 -- Dumping data for table `jurusan`
 --
 
-INSERT INTO `jurusan` (`id`, `nama_jurusan`, `ketua_jurusan_id`) VALUES
+INSERT INTO 
+
+ VALUES
 (1, 'Teknik Informatika', 1),
 (2, 'Teknik Elektro', 2);
 
@@ -108,6 +110,7 @@ CREATE TABLE `pengajuan` (
   `jurusan` varchar(100) NOT NULL,
   `jurusan_id` int(11) DEFAULT NULL,
   `wakil_dekan_id` int(11) DEFAULT NULL,
+  'status_wadek' varchar(100) DEFAULT NULL,
   `tanggal_acc_ketua_jurusan` date DEFAULT NULL,
   `tanggal_acc_wakil_dekan` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
