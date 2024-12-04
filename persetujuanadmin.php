@@ -72,43 +72,51 @@ function generateSuratDispensasi($data) {
     $pdf->SetX(30); // Set posisi X agar sejajar dengan "Perihal"
     $pdf->MultiCell(0, 6, "Kepada Yth.,\n Ibu/Bapak Dosen Mata Kuliah Jurusan" . $data['nama_jurusan'] . "\nDi\nTempat\n\n", 0);
     
-    // Isi Surat
-    $pdf->SetX(30);
-    $pdf->SetFont('Times', '', 11);
-    $pdf->MultiCell(0, 5, "Assalamu'alaikum Wr. Wb.\n\nSalam silaturahmi kami sampaikan, semoga segala aktivitas yang kita lakukan senantiasa berada dalam ridho dan maghfirah Allah SWT.\n\nSehubungan dengan kegiatan yang sedang dilaksanakan, kami memohon izin dispensasi bagi:\n\nNama  : " . $data['nama_lengkap'] . "\nNIM    : " . $data['nim'] . "\nProdi   : " . $data['nama_jurusan'] . "\nAlasan : " . $data['alasan'] . "\n\nUntuk tidak mengikuti kegiatan perkuliahan pada waktu yang bersamaan dengan kegiatan tersebut.\n\nDemikian surat ini kami sampaikan, atas perhatian dan kerja samanya, kami ucapkan terima kasih.\n\nWassalamu'alaikum Wr. Wb.", 0);
-
-    // Footer - Tanda Tangan
-    $pdf->Ln(13); // Menambahkan jarak untuk tanda tangan
-
-    // Mengetahui, (posisi kiri)
-    $pdf->SetX(30); // Set posisi ke kiri
-    $pdf->Cell(90, 6, 'Mengetahui,', 0, 0, 'L');
-    $pdf->Cell(0, 6, '', 0, 1, 'L'); // Ruang kosong di sebelah kanan untuk Wadek
-
-    // Layout footer: Kajur di kiri
-    $pdf->SetX(30); // Set posisi ke kiri
-    $pdf->Cell(90, 6, 'Ketua Jurusan', 0, 0, 'L');
-    
-    // Wadek geser ke kanan
-    $pdf->SetX(140); // Geser lebih kanan
-    $pdf->Cell(0, 6, 'Wakil Dekan III', 0, 1, 'L');
-    $pdf->Ln(13); // Menambahkan jarak lebih
-
-    // Nama dan NIP Kajur (Kiri)
-    $pdf->SetX(30); // Set posisi ke kiri
-    $pdf->Cell(90, 6, $data['kajur'], 0, 0, 'L');
-    
-    // Nama dan NIP Wadek (Kanan)
-    $pdf->SetX(140); // Geser lebih kanan
-    $pdf->Cell(0, 6, $data['nama_wadek'], 0, 1, 'L');
-
-    // NIP Kajur (Kiri) dan Wadek (Kanan)
-    $pdf->SetX(30); // Set posisi ke kiri
-    $pdf->Cell(90, 6, 'NIP: ' . $data['nip_kajur'], 0, 0, 'L');
-    
-    $pdf->SetX(140); // Geser lebih kanan
-    $pdf->Cell(0, 6, 'NIP: ' . $data['nip_wadek'], 0, 1, 'L');
-
+      // Isi Surat
+      $pdf->SetX(30);
+      $pdf->SetFont('Times', '', 11);
+      $pdf->MultiCell(0, 5, 
+  "Assalamu'alaikum Wr. Wb.
+  
+  Salam silaturahmi kami sampaikan, semoga segala aktivitas yang kita lakukan senantiasa berada dalam ridho dan maghfirah Allah SWT.
+  Sehubungan dengan kegiatan yang sedang dilaksanakan, atas nama Dekan Fakultas, kami memberikan izin dispensasi kepada mahasiswa berikut:
+  
+  Nama   : " . $data['nama_lengkap'] . "
+  NIM    : " . $data['nim'] . "
+  Prodi  : " . $data['nama_jurusan'] . "
+  Alasan : " . $data['alasan'] . "
+  
+  Dengan ini, kami memohon kerja sama Ibu/Bapak untuk memberikan dispensasi kepada mahasiswa tersebut agar tidak mengikuti perkuliahan pada waktu yang bersamaan dengan kegiatan tersebut.
+  
+  Surat ini disampaikan sebagai bentuk pemberitahuan dan persetujuan resmi dari pihak fakultas. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.
+  
+  Wassalamu'alaikum Wr. Wb.", 0);
+  
+      // Footer - Tanda Tangan
+      $pdf->Ln(10); // Menambahkan jarak untuk tanda tangan
+  
+      // Mengetahui (di atas Dekan,)
+      $pdf->SetX(140); // Set posisi ke kanan
+      $pdf->Cell(0, 6, 'Mengetahui', 0, 1, 'L');
+  
+      // Dekan (di bawah Mengetahui)
+      $pdf->SetX(140); // Geser lebih kanan
+      $pdf->Cell(0, 6, 'Dekan,', 0, 1, 'L');
+  
+      // Foto Dekan (di bawah Dekan,)
+      $pdf->Ln(5); // Menambahkan jarak sebelum gambar
+      $pdf->SetX(140); // Posisi gambar sesuai dengan teks
+      $pdf->Image('image/tandatangandekan.png', 140, $pdf->GetY()- 10, 60); // Sesuaikan path gambar
+  
+      // Nama Dekan (di bawah foto)
+      $pdf->Ln(20); // Menambahkan jarak setelah gambar
+      $pdf->SetX(140); // Geser lebih kanan
+      $pdf->Cell(0, 6, 'Dr. Hasniah Aliah, M.,Si', 0, 1, 'L');
+  
+      // NIP Dekan (di bawah nama Dekan)
+      $pdf->SetX(140); // Geser lebih kanan
+      $pdf->Cell(0, 6, 'NIP: 19780613 200501 2 014', 0, 1, 'L');
+  
     // Simpan File
     $filename = "surat_dispensasi/Surat_Dispensasi_{$data['nama_lengkap']}_{$data['id']}.pdf";
     $pdf->Output('F', $filename);
