@@ -83,6 +83,7 @@ function sanitizeJurusan($jurusan) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     
     <style>
         body {
@@ -364,7 +365,8 @@ function sanitizeJurusan($jurusan) {
                             <th>NIM</th>
                             <th>Angkatan</th>
                             <th>Alasan</th>
-                            <th>Tanggal Pengajuan</th>
+                            <th>Tanggal Awal Pengajuan</th>
+                            <th>Tanggal Akhir Pengajuan</th>
                             <th>Status Kajur</th>
                             <th>Status Wadek</th>
                             <th>Action</th>
@@ -379,6 +381,7 @@ function sanitizeJurusan($jurusan) {
                             <td><?= htmlspecialchars($row['angkatan']); ?></td>
                             <td><?= htmlspecialchars($row['alasan']); ?></td>
                             <td><?= htmlspecialchars($row['tanggal_pengajuan']); ?></td>
+                            <td><?= htmlspecialchars($row['akhir_pengajuan']); ?></td>
                             <td class="text-center">
                                 <?php if ($row['status'] == 'pending'): ?>
                                     <span class="status-badge status-belum-diproses">Belum diproses</span>

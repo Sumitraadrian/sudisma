@@ -68,26 +68,21 @@ function sanitizeJurusan($jurusan) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUDISMA - Dispensasi</title>
+    <link rel="icon" type="image/png" href="image/logoweb.png?v=1">
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
-    <style>
+</head>
+<style>
         body {
             background-color: #f8f9fa;
         }
@@ -264,7 +259,6 @@ function sanitizeJurusan($jurusan) {
 }
 
     </style>
-</head>
 <body>
     <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -364,7 +358,8 @@ function sanitizeJurusan($jurusan) {
                             <th>NIM</th>
                             <th>Angkatan</th>
                             <th>Alasan</th>
-                            <th>Tanggal Pengajuan</th>
+                            <th>Tanggal Awal Pengajuan</th>
+                            <th>Tanggal Akhir Pengajuan</th>
                             <th>Status Kajur</th>
                             <th>Status Wadek</th>
                         </tr>
@@ -378,6 +373,7 @@ function sanitizeJurusan($jurusan) {
                             <td><?= htmlspecialchars($row['angkatan']); ?></td>
                             <td><?= htmlspecialchars($row['alasan']); ?></td>
                             <td><?= htmlspecialchars($row['tanggal_pengajuan']); ?></td>
+                            <td><?= htmlspecialchars($row['akhir_pengajuan']); ?></td>
                             <td class="text-center">
                                 <?php if ($row['status'] == 'pending'): ?>
                                     <span class="status-badge status-belum-diproses">Belum diproses</span>

@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jurusan_id = $_POST['jurusan_id'];
     $alasan = $_POST['alasan'];
     $tanggal_pengajuan = $_POST['tanggal_pengajuan'];
+    $akhir_pengajuan = $_POST['akhir_pengajuan'];
 
     // Pastikan NIM dan email yang sudah diambil dari database digunakan
     $nim = $user['username'];
@@ -98,14 +99,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Query untuk memasukkan data ke dalam tabel pengajuan
     $query = "INSERT INTO pengajuan 
-              (user_id, nama_lengkap, nim, angkatan, email, alasan, tanggal_pengajuan, dokumen_lampiran, jurusan_id) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+              (user_id, nama_lengkap, nim, angkatan, email, alasan, tanggal_pengajuan, akhir_pengajuan, dokumen_lampiran, jurusan_id) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Gunakan prepared statement untuk menghindari SQL Injection
     $stmt = $conn->prepare($query);
 
     if ($stmt) {
-        $stmt->bind_param("isssssssi", $user_id, $nama_lengkap, $nim, $angkatan, $email, $alasan, $tanggal_pengajuan, $lampiran_nama, $jurusan_id);
+        $stmt->bind_param("issssssssi", $user_id, $nama_lengkap, $nim, $angkatan, $email, $alasan, $tanggal_pengajuan, $akhir_pengajuan, $lampiran_nama, $jurusan_id);
 
         if ($stmt->execute()) {
             // Pengajuan berhasil, kirim email notifikasi ke kajur
@@ -187,7 +188,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </head>
                     <body>
                         <p>Yth. Bapak/Ibu Kajur,</p>
-                        <p>Mahasiswa dengan NIM: $nim telah mengajukan dispensasi dengan alasan: $alasan.</p>
+                        <p>Mahasiswa dengan detail berikut:\n</p>
+                        <p>NIM: $nim </p>
+                        <p>NIM: $nama_lengkap </p> 
+                        <p>telah mengajukan dispensasi dengan alasan: $alasan.</p>
                         <p>Harap melakukan pengecekan dan tindakan lebih lanjut.</p>
                         <p>Terima kasih.</p>
                     </body>
@@ -232,6 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     <style>
         .custom-bg { background-color: #5393F3; }
 
@@ -355,40 +360,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Main Content -->
     <div class="content-wrapper custom-bg d-flex justify-content-center align-items-center" id="contentWrapper">
-        <div class="form-container col-md-6 col-lg-5">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Form Pengajuan Dispensasi</h2>
-                    <form id="dispensasiForm" method="POST" action="" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="nama_lengkap" class="form-label">Nama Lengkap Mahasiswa</label>
-                            <input type="text" name="nama_lengkap" class="form-control" value="<?php echo $user['nama']; ?>" readonly>
-                        </div>
+    <div class="form-container col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Form Pengajuan Dispensasi</h2>
+                <!-- Catatan Section -->
+                <div class="alert alert-info">
+                    <strong>Catatan:</strong> Setelah pengajuan dispensasi disetujui, untuk antisipasi tidak terkirimnya surat dispensasi kepada dosen mata kuliah, mahasiswa diharapkan mengirimkan surat dispensasi kepada dosen mata kuliah secara pribadi.
+                </div>
+                <form id="dispensasiForm" method="POST" action="" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="nama_lengkap" class="form-label">Nama Lengkap Mahasiswa</label>
+                        <input type="text" name="nama_lengkap" class="form-control" value="<?php echo $user['nama']; ?>" readonly>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="nim" class="form-label">Nomor Induk Mahasiswa (NIM)</label>
-                            <input type="text" name="nim" class="form-control" value="<?php echo $nim; ?>" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="angkatan" class="form-label">Angkatan</label>
-                            <input type="text" name="angkatan" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jurusan_id" class="form-label">Jurusan</label>
-                            <select name="jurusan_id" class="form-select" required>
-                                <option value="">Pilih Jurusan</option>
-                                <?php
-                                if ($result_jurusan->num_rows > 0) {
-                                    while ($row = $result_jurusan->fetch_assoc()) {
-                                        echo '<option value="' . $row['id'] . '">' . $row['nama_jurusan'] . '</option>';
-                                    }
-                                } else {
-                                    echo '<option value="">Tidak ada jurusan tersedia</option>';
+                    <div class="mb-3">
+                        <label for="nim" class="form-label">Nomor Induk Mahasiswa (NIM)</label>
+                        <input type="text" name="nim" class="form-control" value="<?php echo $nim; ?>" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="angkatan" class="form-label">Angkatan</label>
+                        <input type="text" name="angkatan" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="jurusan_id" class="form-label">Jurusan</label>
+                        <select name="jurusan_id" class="form-select" required>
+                            <option value="">Pilih Jurusan</option>
+                            <?php
+                            if ($result_jurusan->num_rows > 0) {
+                                while ($row = $result_jurusan->fetch_assoc()) {
+                                    echo '<option value="' . $row['id'] . '">' . $row['nama_jurusan'] . '</option>';
                                 }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
+                            } else {
+                                echo '<option value="">Tidak ada jurusan tersedia</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <div class="form-title">
                             <h4>Dosen Mata Kuliah</h4>
                             <button type="button" class="add-dosen-btn" onclick="addDosenForm()">
@@ -396,31 +408,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </button>
                         </div>
                         <div id="dosenFormsContainer"></div>
-                        <div class="mb-3">
-                            <label for="alasan" class="form-label">Alasan Pengajuan</label>
-                            <textarea name="alasan" class="form-control" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tanggal_pengajuan" class="form-label">Tanggal Pengajuan</label>
-                            <input type="date" name="tanggal_pengajuan" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Mahasiswa</label>
-                            <input type="email" name="email" class="form-control" value="<?php echo $email; ?>" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dokumen_lampiran" class="form-label">Lampiran Dokumen</label>
-                            <div class="form-text">Format PDF maksimal 2 MB</div>
-                            <input type="file" name="dokumen_lampiran" class="form-control">
-                            
-                        </div>
+                    </div>
 
-                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" >Simpan Data</button>
-                    </form>
-                </div>
+                    <div class="mb-3">
+                        <label for="alasan" class="form-label">Alasan Pengajuan</label>
+                        <textarea name="alasan" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tanggal_pengajuan" class="form-label">Tanggal Awal Pengajuan</label>
+                        <input type="date" name="tanggal_pengajuan" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="akhir_pengajuan" class="form-label">Tanggal Akhir Pengajuan</label>
+                        <input type="date" name="akhir_pengajuan" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Mahasiswa</label>
+                        <input type="email" name="email" class="form-control" value="<?php echo $email; ?>" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="dokumen_lampiran" class="form-label">Lampiran Dokumen</label>
+                        <div class="form-text">Format PDF maksimal 2 MB</div>
+                        <input type="file" name="dokumen_lampiran" class="form-control">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-100">Simpan Data</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
    <!-- Modal Konfirmasi -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -585,6 +607,7 @@ document.getElementById("confirmButton").addEventListener("click", function() {
     const jurusan_id = form.querySelector("[name='jurusan_id']");
     const alasan = form.querySelector("[name='alasan']");
     const tanggal_pengajuan = form.querySelector("[name='tanggal_pengajuan']");
+    const akhir_pengajuan = form.querySelector("[name='akhir_pengajuan']");
     const dokumen_lampiran = form.querySelector("[name='dokumen_lampiran']");
 
     if (!isDosenSelected) {

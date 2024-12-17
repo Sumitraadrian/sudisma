@@ -19,6 +19,7 @@ $result = $conn->query($query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status Pengajuan Dispensasi</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .badge-disetujui { background-color: #28a745; color: white;}
@@ -163,7 +164,8 @@ $result = $conn->query($query);
                     <thead class="thead-light">
                         <tr>
                             <th>No</th>
-                            <th>Tanggal Pengajuan</th>
+                            <th>Tanggal Awal Pengajuan</th>
+                            <th>Tanggal Akhir Pengajuan</th>
                             <th>Alasan</th>
                             <th>Status Kajur</th>
                             <th>Status Wadek</th>
@@ -176,6 +178,7 @@ $result = $conn->query($query);
                                     <tr>
                                         <td><?= $counter++; ?></td>
                                         <td><?= $row['tanggal_pengajuan']; ?></td>
+                                        <td><?= $row['akhir_pengajuan']; ?></td>
                                         <td><?= $row['alasan']; ?></td>
                                         <td>
                                             <span class="badge 
@@ -205,7 +208,7 @@ $result = $conn->query($query);
                                 <?php endwhile; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">Belum ada pengajuan dispensasi.</td>
+                                    <td colspan="6" class="text-center text-muted">Belum ada pengajuan dispensasi.</td>
                                 </tr>
                             <?php endif; ?>
                     </tbody>

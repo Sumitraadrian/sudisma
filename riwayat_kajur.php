@@ -75,6 +75,7 @@ if (isset($_SESSION['user_id'])) {
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -375,7 +376,8 @@ if (isset($_SESSION['user_id'])) {
                                 <th>Nama Lengkap</th>
                                 <th>NIM</th>
                                 <th>Angkatan</th>
-                                <th>Tanggal Pengajuan</th>
+                                <th>Tanggal Awal Pengajuan</th>
+                                <th>Tanggal Akhir Pengajuan</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -388,6 +390,7 @@ if (isset($_SESSION['user_id'])) {
                                 <td><?= htmlspecialchars($row['nim']); ?></td>
                                 <td class="text-center"><?= htmlspecialchars($row['angkatan']); ?></td>
                                 <td class="text-center"><?= htmlspecialchars($row['tanggal_pengajuan']); ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['akhir_pengajuan']); ?></td>
                                 <td class="text-center">
                                     
                                     <?php if ($row['status'] == 'pending'): ?>

@@ -137,6 +137,7 @@ $statusText = $statusMap[$pengajuan['status']];
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     <style>
        body {
             background-color: #a3c1e0;
@@ -348,7 +349,8 @@ $statusText = $statusMap[$pengajuan['status']];
                         <p><strong>Nama</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['nama_lengkap']); ?></span></p>
                         <p><strong>NIM</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['nim']); ?></span></p>
                         <p><strong>Angkatan</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['angkatan']); ?></span></p>
-                        <p><strong>Tanggal Pengajuan</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['tanggal_pengajuan']); ?></span></p>
+                        <p><strong>Tanggal Awal Pengajuan</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['tanggal_pengajuan']); ?></span></p>
+                        <p><strong>Tanggal Akhir Pengajuan</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['akhir_pengajuan']); ?></span></p>
                         <p><strong>Alasan</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['alasan']); ?></span></p>
                         <p><strong>Email</strong> <span><strong>: </strong><?= htmlspecialchars($pengajuan['email']); ?></span></p>
                         <p><strong>Lampiran Dokumen</strong><span><strong>: </strong>

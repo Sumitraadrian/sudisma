@@ -90,6 +90,7 @@ while ($row = $result->fetch_assoc()) {
     <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
@@ -317,7 +318,8 @@ while ($row = $result->fetch_assoc()) {
                         <th>NIM</th>
                         <th>Angkatan</th>
                         <th>Alasan</th>
-                        <th>Tanggal Pengajuan</th>
+                        <th>Tanggal Awal Pengajuan</th>
+                        <th>Tanggal Akhir Pengajuan</th>
                         <th>Status</th>
                         <th>Persetujuan Anda</th>
                         <th>Actions</th>
@@ -334,6 +336,7 @@ while ($row = $result->fetch_assoc()) {
                                 <td class="text-center"><?= htmlspecialchars($row['angkatan']); ?></td>
                                 <td><?= htmlspecialchars($row['alasan']); ?></td>
                                 <td class="text-center"><?= htmlspecialchars($row['tanggal_pengajuan']); ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['akhir_pengajuan']); ?></td>
                                 <td class="text-center">
                                     <?php if ($row['status'] == 'pending'): ?>
                                         <span class="status-badge status-belum-diproses">Belum diproses</span>

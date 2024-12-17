@@ -364,6 +364,7 @@ if (!$pengajuan) {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     <style>
         body {
             background-color: #a3c1e0;
@@ -603,8 +604,12 @@ if (!$pengajuan) {
                             <span><?= htmlspecialchars($pengajuan['angkatan']); ?></span>
                         </p>
                         <p>
-                            <strong>Tanggal Pengajuan:</strong> 
+                            <strong>Tanggal Awal Pengajuan:</strong> 
                             <span><?= htmlspecialchars($pengajuan['tanggal_pengajuan']); ?></span>
+                        </p>
+                        <p>
+                            <strong>Tanggal Akhir Pengajuan:</strong> 
+                            <span><?= htmlspecialchars($pengajuan['akhir_pengajuan']); ?></span>
                         </p>
                         <p>
                             <strong>Alasan:</strong> 

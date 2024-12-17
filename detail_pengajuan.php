@@ -96,6 +96,7 @@ if (!$pengajuan) {
     <title>SUDISMA - Dispensasi</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/logoweb.png">
     <style>
         body {
             background-color: #a3c1e0;
